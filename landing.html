@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penjana Gambar Raya AI | Cikgu KB</title>
+  <style>
+    :root {
+      --teal: #0d7377;
+      --teal-dark: #084c4f;
+      --teal-light: #14a6ab;
+      --amber: #f5a623;
+      --amber-light: #ffc85a;
+      --amber-dark: #c07d0a;
+      --dark: #0b1f20;
+      --dark2: #122526;
+      --light: #f4fafa;
+      --light2: #e6f4f4;
+      --white: #ffffff;
+      --text: #1a2e2f;
+      --text-muted: #4a7072;
+      --border: #b2d8d8;
+      --red: #e53935;
+      --green: #2e7d32;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── STICKY NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: var(--teal-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    .nav-logo {
+      color: var(--amber-light);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--amber) 0%, var(--amber-light) 100%);
+      color: var(--dark);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(245,166,35,0.4); }
+
+    /* ── URGENCY BAR ── */
+    .urgency-bar {
+      background: linear-gradient(90deg, var(--red) 0%, #b71c1c 100%);
+      color: #fff;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .urgency-bar span { color: var(--amber-light); font-weight: 800; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, var(--teal-dark) 0%, #0a3535 40%, var(--dark) 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 60px 20px 50px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(20,166,171,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(245,166,35,0.08) 0%, transparent 50%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245,166,35,0.15);
+      border: 1px solid var(--amber);
+      color: var(--amber-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(24px, 4.5vw, 40px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--amber-light);
+      display: block;
+    }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.72);
+      font-size: 15px;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--amber-light);
+    }
+
+    .hero-stat span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--amber) 0%, var(--amber-light) 100%);
+      color: var(--dark);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      box-shadow: 0 6px 20px rgba(245,166,35,0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(245,166,35,0.45); }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85);
+      padding: 13px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--amber); color: var(--amber-light); }
+
+    /* HERO IMAGE CARD */
+    .hero-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card-top {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .hero-card-top p {
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .hero-photo {
+      width: 100%;
+      display: block;
+      max-height: 360px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .hero-card-bottom {
+      padding: 14px 18px;
+      text-align: center;
+    }
+
+    .hero-card-bottom strong {
+      color: var(--amber-light);
+      font-size: 15px;
+    }
+
+    .hero-card-bottom span {
+      display: block;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    /* ── SECTION SHARED ── */
+    .section { padding: 64px 20px; }
+    .section-alt { background: var(--light2); }
+    .section-dark { background: var(--dark2); }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    .section-label {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .section-title.light { color: #fff; }
+
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 40px;
+    }
+
+    .section-subtitle.light { color: rgba(255,255,255,0.65); }
+
+    /* ── PAIN POINTS ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .pain-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .pain-icon {
+      font-size: 26px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pain-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--red); }
+    .pain-card p { font-size: 13px; color: var(--text-muted); }
+
+    .solution-banner {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .solution-banner h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--amber-light); }
+    .solution-banner p { font-size: 14px; color: rgba(255,255,255,0.8); }
+
+    /* ── HOW IT WORKS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .step-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .step-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(13,115,119,0.12); }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 4px 12px rgba(13,115,119,0.3);
+    }
+
+    .step-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .step-card p { font-size: 13px; color: var(--text-muted); }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 22px 20px;
+      transition: background 0.2s;
+    }
+
+    .feature-card:hover { background: rgba(255,255,255,0.08); }
+
+    .feature-icon { font-size: 28px; margin-bottom: 12px; }
+    .feature-card h4 { font-size: 14px; font-weight: 700; color: var(--amber-light); margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+    /* ── STYLES GALLERY ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .gallery-item {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, #0a2f30 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--teal-light);
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      transform: translateY(-2px);
+    }
+
+    .gallery-item .gi-icon { font-size: 20px; margin-bottom: 6px; }
+    .gallery-item .gi-name { font-size: 11px; font-weight: 600; color: #fff; line-height: 1.3; }
+    .gallery-item .gi-tag { font-size: 10px; color: var(--teal-light); margin-top: 3px; }
+
+    /* ── WHO IS THIS FOR ── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .audience-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .audience-card:hover { border-color: var(--teal); box-shadow: 0 6px 20px rgba(13,115,119,0.1); }
+
+    .audience-card .aud-icon { font-size: 32px; margin-bottom: 10px; }
+    .audience-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .audience-card p { font-size: 12px; color: var(--text-muted); }
+
+    /* ── TESTIMONIALS ── */
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .testi-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    .testi-quote {
+      font-size: 36px;
+      color: var(--teal-light);
+      line-height: 1;
+      margin-bottom: 10px;
+      opacity: 0.4;
+    }
+
+    .testi-text { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 18px; font-style: italic; }
+
+    .testi-stars { color: var(--amber); font-size: 14px; margin-bottom: 12px; }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .testi-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .testi-name { font-size: 13px; font-weight: 700; }
+    .testi-verified { font-size: 11px; color: var(--teal); }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: end;
+    }
+
+    .price-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 22px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .price-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.1); }
+
+    .price-card.featured {
+      border-color: var(--amber);
+      transform: scale(1.04);
+      box-shadow: 0 12px 40px rgba(245,166,35,0.2);
+      z-index: 1;
+    }
+
+    .price-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+
+    .price-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--amber) 0%, var(--amber-light) 100%);
+      color: var(--dark);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 5px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(245,166,35,0.35);
+    }
+
+    .price-tier { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 10px; }
+
+    .price-amount {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--teal-dark);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .price-amount sup { font-size: 20px; vertical-align: super; }
+
+    .price-card.featured .price-amount { color: var(--amber-dark); }
+
+    .price-note { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+
+    .price-stock {
+      display: inline-block;
+      background: #fff3e0;
+      border: 1px solid #ffcc80;
+      color: #e65100;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .price-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    .price-features { list-style: none; text-align: left; margin-bottom: 24px; }
+
+    .price-features li {
+      font-size: 13px;
+      color: var(--text);
+      padding: 5px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .price-features li::before { content: '✓'; color: var(--teal); font-weight: 800; flex-shrink: 0; }
+
+    .price-features li.strike { color: #bbb; text-decoration: line-through; }
+    .price-features li.strike::before { content: '✗'; color: #ddd; }
+
+    .btn-buy {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(13,115,119,0.25);
+      text-align: center;
+    }
+
+    .btn-buy:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,115,119,0.35); }
+
+    .btn-buy.amber {
+      background: linear-gradient(135deg, var(--amber) 0%, var(--amber-light) 100%);
+      color: var(--dark);
+      box-shadow: 0 4px 14px rgba(245,166,35,0.3);
+    }
+
+    .btn-buy.amber:hover { box-shadow: 0 8px 24px rgba(245,166,35,0.45); }
+
+    .pricing-note {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pricing-note strong { color: var(--teal-dark); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .faq-q:hover { background: var(--light2); }
+
+    .faq-q span { font-size: 18px; color: var(--teal); transition: transform 0.3s; flex-shrink: 0; }
+
+    .faq-item.open .faq-q span { transform: rotate(45deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      padding: 0 20px;
+    }
+
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 16px; }
+
+    /* ── FINAL CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--dark) 100%);
+      padding: 72px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(20,166,171,0.15) 0%, transparent 70%);
+    }
+
+    .cta-section .container { position: relative; z-index: 1; }
+
+    .cta-section h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .cta-section h2 span { color: var(--amber-light); }
+    .cta-section p { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 32px; }
+
+    .cta-price-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 16px 28px;
+      margin-bottom: 28px;
+    }
+
+    .cta-price-display .from { font-size: 13px; color: rgba(255,255,255,0.6); }
+    .cta-price-display .price { font-size: 36px; font-weight: 900; color: var(--amber-light); }
+    .cta-price-display .orig { font-size: 18px; color: rgba(255,255,255,0.35); text-decoration: line-through; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 28px 20px;
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    footer a { color: var(--teal-light); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { max-width: 320px; margin: 0 auto; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .price-card.featured { transform: none; }
+      .price-card.featured:hover { transform: translateY(-4px); }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .style-showcase-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── STYLE SHOWCASE ── */
+    .style-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .ssc {
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      height: 160px;
+      cursor: pointer;
+      transition: transform 0.22s, box-shadow 0.22s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 10px 12px;
+      gap: 8px;
+    }
+
+    .ssc:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+    }
+
+    .ssc::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: inherit;
+      opacity: 0.85;
+      transition: opacity 0.22s;
+    }
+
+    .ssc:hover::before { opacity: 1; }
+
+    .ssc-icon {
+      position: relative;
+      z-index: 1;
+      font-size: 36px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    }
+
+    .ssc-name {
+      position: relative;
+      z-index: 1;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .ssc-tag {
+      position: relative;
+      z-index: 1;
+      font-size: 9.5px;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="nav">
+  <div class="nav-logo">🌙 PenjanaRaya.AI</div>
+  <a href="#bayar" class="nav-cta" onclick="scrollToBayar(event)">Dapatkan Sekarang</a>
+</nav>
+
+<!-- URGENCY BAR -->
+<div class="urgency-bar">
+  Harga RM29 terhad untuk <span>49 pembeli pertama sahaja</span> — Harga asal RM69 selepas itu!
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">🌙 Koleksi Visual Raya 2026</div>
+      <h1>Gambar Raya Anda, <em>Naik Taraf Dengan AI</em></h1>
+      <p class="hero-desc">
+        Masukkan gambar anda. Pilih gaya. Prompt siap dalam saat — hasil setaraf kerja designer profesional, tanpa bayaran mahal dan tanpa kemahiran teknikal.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>🎨</strong>
+          <span>Pelbagai Gaya</span>
+        </div>
+        <div class="hero-stat">
+          <strong>5</strong>
+          <span>Mood Visual</span>
+        </div>
+        <div class="hero-stat">
+          <strong>&lt; 5 min</strong>
+          <span>Prompt Siap</span>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="#bayar" class="btn-primary" onclick="scrollToBayar(event)">Cuba Sekarang — RM29</a>
+        <a href="#cara-guna" class="btn-secondary">Tengok Cara Kerja</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-top">
+        <p>Diasaskan oleh</p>
+      </div>
+      <img class="hero-photo" src="https://i.ibb.co/Z1gvY7Gs/unnamed-1-clean.png" alt="Cikgu KB" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div style="display:none; height:260px; background:linear-gradient(135deg,#0d7377,#14a6ab); align-items:center; justify-content:center; font-size:60px;">👨‍🏫</div>
+      <div class="hero-card-bottom">
+        <strong>Cikgu KB</strong>
+        <span>Pakar Penjana Prompt AI Raya</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">Situasi Biasa</div>
+    <h2 class="section-title">Penat Jana Gambar Raya Yang Nampak "Cincai"?</h2>
+    <p class="section-subtitle">Anda bukan sorang — kebanyakan orang hadapi situasi yang sama setiap tahun...</p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">😮‍💨</div>
+        <div>
+          <h4>Entri Kosong, Kepala Pusing</h4>
+          <p>Dah buka AI, tapi tak tahu nak taip apa. Hasil pun tak kena</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">😬</div>
+        <div>
+          <h4>Muka Jadi Aneh</h4>
+          <p>AI hasilkan wajah yang tak sama langsung dengan diri sendiri</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🙄</div>
+        <div>
+          <h4>Terlalu Banyak Pilihan</h4>
+          <p>Scroll panjang, tak tahu gaya mana yang betul-betul sesuai</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">⏳</div>
+        <div>
+          <h4>Cuba Berkali-kali, Sama Hasilnya</h4>
+          <p>Habis masa tapi gambar masih nampak biasa-biasa sahaja</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <div>
+          <h4>Upah Designer? Mahal</h4>
+          <p>Satu gambar sahaja boleh cecah RM100–RM500. Tak berbaloi</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🫤</div>
+        <div>
+          <h4>Gambar Nampak Sama Je</h4>
+          <p>Semua orang guna template yang sama. Mana nak keluar beza?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="solution-banner">
+      <h3>Kami Dah Selesaikan Semua Tu Untuk Anda</h3>
+      <p>Sistem penjana prompt yang dibina khas untuk visual Raya — anda hanya perlu masukkan gambar, pilih gaya, dan salin. Semua teknikal dah kami uruskan.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="cara-guna">
+  <div class="container">
+    <div class="section-label">Cara Ia Berfungsi</div>
+    <h2 class="section-title">Dari Gambar Biasa Ke Visual Raya Yang Memukau</h2>
+    <p class="section-subtitle">6 langkah mudah, selesai dalam masa minum kopi</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>Muat Naik Gambar</h4>
+        <p>Gambar sendiri, pasangan, keluarga atau perniagaan</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>Tulis Nama Anda</h4>
+        <p>Nama individu, keluarga atau jenama yang anda wakili</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>Pilih Ucapan</h4>
+        <p>Dari senarai pilihan atau tulis sendiri mengikut hati</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>Pilih Gaya Visual</h4>
+        <p>Koleksi gaya eksklusif — ada yang hangat, ada yang mewah</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <h4>Tetapkan Mood</h4>
+        <p>Suasana gambar anda — dari nostalgia hingga sinematik</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <h4>Salin & Jana</h4>
+        <p>Tampal prompt ke ChatGPT atau Gemini, gambar siap!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-label">Kelebihan Utama</div>
+    <h2 class="section-title light">Apa Yang Buat Sistem Ini Berbeza?</h2>
+    <p class="section-subtitle light">Direka dari perspektif pengguna — bukan sekadar generator biasa</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h4>Koleksi Gaya Terkurasi</h4>
+        <p>Setiap gaya direka khas untuk konteks Raya — bukan sekadar filter rawak</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🪞</div>
+        <h4>Wajah Anda, Bukan Orang Lain</h4>
+        <p>Prompt dioptimumkan supaya AI kekalkan ciri wajah anda dengan tepat</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✍️</div>
+        <h4>Teks Terletak Dengan Kemas</h4>
+        <p>Ucapan dan nama diposisikan elok — tiada pertindihan pada bahagian wajah</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌗</div>
+        <h4>5 Suasana Berbeza</h4>
+        <p>Warm Golden, Soft Elegant, Premium Luxury, Nostalgic Kampung, Cinematic Festival</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👨‍👩‍👧</div>
+        <h4>Untuk Semua Jenis Gambar</h4>
+        <p>Berseorangan, berdua, berkumpulan — atau gambar perniagaan sekalipun</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h4>Serasi Pelbagai Platform</h4>
+        <p>Prompt berfungsi dengan ChatGPT, Gemini, Midjourney dan Adobe Firefly</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h4>Jiwa Melayu, Rasa Tempatan</h4>
+        <p>Elemen budaya dan Islam dimasukkan — bukan sekadar terjemahan literal</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">♾️</div>
+        <h4>Bayar Sekali, Milik Selamanya</h4>
+        <p>Tiada langganan. Tiada caj tersembunyi. Akses kekal tanpa had</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STYLES GALLERY -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">🔄 Koleksi Gaya Visual</div>
+    <h2 class="section-title">Pilih Gaya, Ubah Keseluruhan Suasana</h2>
+    <p class="section-subtitle">Setiap kad di bawah menunjukkan rupa sebenar gaya — gambar anda akan dimasukkan ke dalam visual seperti ini</p>
+
+    <div class="style-showcase-grid" id="styleShowcase"></div>
+  </div>
+</section>
+
+<!-- RESULTS SECTION -->
+<section class="section" style="padding-left:0; padding-right:0;">
+  <div style="max-width:1100px; margin:0 auto; padding:0 20px;">
+    <div style="text-align:left; margin-bottom:32px;">
+      <div class="section-label">Hasil Sebenar</div>
+      <h2 class="section-title">Hasil Yang Dijana Oleh Sistem Ini</h2>
+      <p class="section-subtitle">Gambar-gambar di bawah dihasilkan menggunakan prompt dari sistem ini — inilah yang menanti anda</p>
+    </div>
+  </div>
+
+  <!-- TOP ROW: 2 portrait images side by side -->
+  <div style="max-width:1100px; margin:0 auto; padding:0 20px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+      <div style="border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.14); transition:transform 0.25s, box-shadow 0.25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 14px 36px rgba(0,0,0,0.22)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 24px rgba(0,0,0,0.14)'">
+        <img src="https://i.ibb.co/RGstDyGw/unnamed-clean.png" alt="Hasil Gambar Raya 1" style="width:100%; height:100%; display:block; object-fit:cover; min-height:320px;" />
+      </div>
+      <div style="border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.14); transition:transform 0.25s, box-shadow 0.25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 14px 36px rgba(0,0,0,0.22)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 24px rgba(0,0,0,0.14)'">
+        <img src="https://i.ibb.co/vCFrFP8p/unnamed-3-clean.png" alt="Hasil Gambar Raya 2" style="width:100%; height:100%; display:block; object-fit:cover; min-height:320px;" />
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: before-after full width -->
+    <div style="border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.14); transition:transform 0.25s, box-shadow 0.25s; margin-bottom:14px;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 14px 36px rgba(0,0,0,0.22)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 24px rgba(0,0,0,0.14)'">
+      <img src="https://i.ibb.co/3y1MDVLn/before-after.png" alt="Sebelum & Selepas" style="width:100%; display:block; object-fit:contain; background:#0b1f20;" />
+    </div>
+
+    <div style="border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.14); transition:transform 0.25s, box-shadow 0.25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 14px 36px rgba(0,0,0,0.22)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 24px rgba(0,0,0,0.14)'">
+      <img src="https://i.ibb.co/5gv9yhw3/before-and-after.png" alt="Sebelum & Selepas 2" style="width:100%; display:block; object-fit:contain; background:#0b1f20;" />
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:32px; padding:0 20px;">
+    <a href="#bayar" onclick="scrollToBayar(event)" class="btn-primary" style="font-size:15px; padding:14px 32px;">
+      Saya Mahu Gambar Raya Seperti Ini →
+    </a>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Untuk Siapa?</div>
+    <h2 class="section-title">Sesuai Untuk Anda Jika...</h2>
+    <p class="section-subtitle">Tak kira latar belakang — asalkan anda mahu gambar Raya yang lain dari yang lain</p>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="aud-icon">👨‍👩‍👧‍👦</div>
+        <h4>Anda & Keluarga</h4>
+        <p>Kenangan Raya yang indah dalam visual berkelas</p>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon">🏪</div>
+        <h4>Peniaga & Usahawan</h4>
+        <p>Ucapan Raya berjenama yang meninggalkan kesan</p>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon">👩‍💼</div>
+        <h4>Profesional & Eksekutif</h4>
+        <p>Imej yang sesuai untuk dikongsi di LinkedIn atau e-mel</p>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon">📱</div>
+        <h4>Pengurusan Sosial Media</h4>
+        <p>Hasilkan kandungan Raya premium untuk klien dalam masa singkat</p>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon">🎓</div>
+        <h4>Pelajar & Belia</h4>
+        <p>Gambar Raya yang viral dan mencuri tumpuan</p>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon">🌐</div>
+        <h4>Kreator & Influencer</h4>
+        <p>Kandungan perayaan yang mewakili identiti visual anda</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">Kata Mereka</div>
+    <h2 class="section-title">Orang Dah Tanya "Pakai App Apa?"</h2>
+    <p class="section-subtitle">Bukan kami yang cakap — ini dari mulut pengguna sendiri</p>
+
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Banyak pilihan gaya yang boleh dicuba, gambar lama pun muat jugak. Tak perlu buka Canva, tak perlu hire sesiapa. Terus buat sendiri.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">H</div>
+          <div>
+            <div class="testi-name">Hijrad PosArt</div>
+            <div class="testi-verified">✓ Pengguna Disahkan</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Dalam masa 5 minit gambar Raya dah siap. Kawan-kawan ingat aku upah photographer. Padahal buat sendiri je dengan sistem ni.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">H</div>
+          <div>
+            <div class="testi-name">Hairul Eyoi</div>
+            <div class="testi-verified">✓ Pengguna Disahkan</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Gambar 3 tahun lepas pun boleh guna. Yang keluar cantik gila, ramai screenshot. Sampai kena tanya berkali-kali pakai apa buat gambar tu.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Armalin</div>
+            <div class="testi-verified">✓ Pengguna Disahkan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-label">Pelaburan Anda</div>
+    <h2 class="section-title">Nilai Sebenar, Harga Yang Berbaloi</h2>
+    <p class="section-subtitle">Bayar sekali. Guna selama-lamanya. Tiada yuran bulanan, tiada kejutan.</p>
+
+    <div class="pricing-grid" style="grid-template-columns: repeat(2,1fr); max-width:560px; margin:0 auto;">
+
+      <!-- PROMO -->
+      <div class="price-card featured">
+        <div class="price-badge">PALING POPULAR</div>
+        <div class="price-tier">Harga Promosi</div>
+        <div class="price-amount"><sup>RM</sup>29</div>
+        <div class="price-note">Bayar sekali, akses selamanya</div>
+        <div class="price-stock">⏳ Terhad — naik bila-bila masa</div>
+        <hr class="price-divider" />
+        <ul class="price-features">
+          <li>Akses penuh sistem penjana</li>
+          <li>🔄 Koleksi gaya visual eksklusif</li>
+          <li>5 suasana mood berbeza</li>
+          <li>Muat naik gambar sendiri</li>
+          <li>Salin prompt serta-merta</li>
+          <li>Kemas kini koleksi masa hadapan</li>
+        </ul>
+        <a href="#bayar" class="btn-buy amber" onclick="scrollToBayar(event)">Dapatkan Akses — RM29</a>
+      </div>
+
+      <!-- ORIGINAL -->
+      <div class="price-card">
+        <div class="price-tier">Harga Penuh</div>
+        <div class="price-amount"><sup>RM</sup>69</div>
+        <div class="price-note">Harga standard tanpa diskaun</div>
+        <div class="price-stock" style="background:#f3f3f3;border-color:#ddd;color:#888;">Harga biasa</div>
+        <hr class="price-divider" />
+        <ul class="price-features">
+          <li>Akses penuh sistem penjana</li>
+          <li>🔄 Koleksi gaya visual eksklusif</li>
+          <li>5 suasana mood berbeza</li>
+          <li>Muat naik gambar sendiri</li>
+          <li>Salin prompt serta-merta</li>
+          <li>Kemas kini koleksi masa hadapan</li>
+        </ul>
+        <a href="#bayar" class="btn-buy" onclick="scrollToBayar(event)">Dapatkan Akses — RM69</a>
+      </div>
+
+    </div>
+
+    <p class="pricing-note">
+      <strong>Jaminan:</strong> Bayaran sekali, akses seumur hidup. Tiada caj tersembunyi. Tiada langganan bulanan.
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">Soalan Lazim</div>
+    <h2 class="section-title">Ada Soalan? Kami Dah Jangka</h2>
+    <p class="section-subtitle" style="margin-bottom:32px;">Soalan yang paling kerap ditanya — jawapan yang terus terang</p>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah yang saya perlu untuk menggunakan sistem ini? <span>+</span></div>
+        <div class="faq-a">Anda hanya memerlukan akaun ChatGPT (percuma atau Plus), Gemini atau mana-mana platform AI bergambar. Sistem ini menjana prompt yang anda tampal ke dalam platform AI tersebut bersama gambar anda.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Boleh guna gambar lama? <span>+</span></div>
+        <div class="faq-a">Ya! Gambar lama boleh digunakan asalkan wajah jelas kelihatan dan pencahayaan mencukupi. Pengguna kami berjaya menggunakan gambar sehingga 3-5 tahun yang lalu.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Berapa lama masa diperlukan untuk siap? <span>+</span></div>
+        <div class="faq-a">Proses menjana prompt mengambil masa kurang 1 minit. Selepas prompt disalin ke platform AI, gambar biasanya siap dalam masa 1-3 minit. Keseluruhan proses kurang 5 minit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Adakah wajah saya akan kelihatan betul? <span>+</span></div>
+        <div class="faq-a">Prompt kami dioptimumkan khusus untuk pemeliharaan wajah (face preservation). Dengan gambar berkualiti tinggi dan wajah yang jelas, AI akan mengekal ciri-ciri wajah anda dengan sangat tepat.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Boleh guna untuk gambar keluarga? <span>+</span></div>
+        <div class="faq-a">Sudah tentu! Sistem ini sesuai untuk gambar individu, pasangan, keluarga kecil mahupun keluarga besar. Boleh juga digunakan untuk gambar perniagaan dan korporat.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Adakah ini bayaran berulang? <span>+</span></div>
+        <div class="faq-a">Tidak sama sekali. Ini adalah bayaran sekali sahaja dan anda mendapat akses seumur hidup. Tiada langganan bulanan, tiada caj tersembunyi.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah platform AI yang serasi? <span>+</span></div>
+        <div class="faq-a">Prompt yang dijana serasi dengan ChatGPT (DALL·E 3), Google Gemini, Midjourney, Adobe Firefly, Stable Diffusion dan kebanyakan platform AI bergambar yang popular.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Boleh saya gunakan untuk tujuan perniagaan? <span>+</span></div>
+        <div class="faq-a">Ya! Ramai peniaga dan pengurus media sosial menggunakan sistem ini untuk menghasilkan kandungan Raya untuk klien mereka. Tidak ada sekatan penggunaan komersial.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section" id="final-cta">
+  <div class="container">
+    <h2>Gambar Raya Anda <span>Patut Lebih Dari Sekadar Biasa</span></h2>
+    <p>Ambil 5 minit. Masukkan gambar anda. Biar AI buat kerja selebihnya.</p>
+    <div class="cta-price-display">
+      <span class="from">Mulai dari</span>
+      <span class="price">RM29</span>
+      <span class="orig">RM69</span>
+    </div>
+    <br />
+    <a href="javascript:void(0)" class="btn-primary" style="font-size:17px; padding:16px 40px;" onclick="event.preventDefault();">
+      Dapatkan Akses Sekarang →
+    </a>
+    <p style="margin-top:16px; font-size:13px; color:rgba(255,255,255,0.45);">Bayaran sekali • Akses seumur hidup • Tiada langganan</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="bayar">
+  <p>© 2026 PenjanaRaya.AI oleh Cikgu KB · Hak Cipta Terpelihara</p>
+</footer>
+
+<script>
+  const STYLES = [
+    { name: "Raya Signboard Portrait", tag: "Potret", icon: "🪧", bg: "linear-gradient(135deg,#1a3a1a,#3a6b1a)", color: "#f5d76e", shadow: "0 4px 16px rgba(20,80,20,0.4)" },
+    { name: "Pop-Up Card Raya", tag: "Kad", icon: "🃏", bg: "linear-gradient(135deg,#5a3000,#c87830)", color: "#fff8e8", shadow: "0 4px 16px rgba(160,80,0,0.4)" },
+    { name: "Paper Craft Diorama", tag: "Kraf", icon: "✂️", bg: "linear-gradient(135deg,#8b6340,#c8a070)", color: "#fff3e0", shadow: "0 4px 16px rgba(100,60,0,0.35)" },
+    { name: "Golden Lantern Portrait", tag: "Lantang Emas", icon: "🏮", bg: "linear-gradient(135deg,#0a1a0a,#1a3a0a)", color: "#ffd700", shadow: "0 4px 16px rgba(200,140,0,0.4)" },
+    { name: "Quran Inspired Spiritual", tag: "Rohani", icon: "☪️", bg: "linear-gradient(135deg,#0f1e4a,#1a3470)", color: "#c8d8ff", shadow: "0 4px 16px rgba(20,40,120,0.4)" },
+    { name: "Bazaar Raya Festival", tag: "Pesta", icon: "🛍️", bg: "linear-gradient(135deg,#7a1a00,#d44000)", color: "#ffd700", shadow: "0 4px 16px rgba(180,60,0,0.4)" },
+    { name: "Studio Raya Premium", tag: "Studio", icon: "📸", bg: "linear-gradient(135deg,#111,#333)", color: "#ffffff", shadow: "0 4px 16px rgba(0,0,0,0.5)" },
+    { name: "Masjid Backdrop Portrait", tag: "Masjid", icon: "🕌", bg: "linear-gradient(135deg,#0a2a18,#1a5030)", color: "#90e0b0", shadow: "0 4px 16px rgba(0,80,40,0.4)" },
+    { name: "Ketupat Frame Greeting", tag: "Ketupat", icon: "🎋", bg: "linear-gradient(135deg,#7a5000,#c89030)", color: "#fff3cc", shadow: "0 4px 16px rgba(120,80,0,0.4)" },
+    { name: "Songket Luxury Portrait", tag: "Songket", icon: "👘", bg: "linear-gradient(135deg,#3d1000,#7a2800)", color: "#ffd700", shadow: "0 4px 16px rgba(120,40,0,0.4)" },
+    { name: "Kampung Nostalgic Scene", tag: "Kampung", icon: "🏡", bg: "linear-gradient(135deg,#2a4a00,#5a8a00)", color: "#fff8d0", shadow: "0 4px 16px rgba(60,100,0,0.4)" },
+    { name: "Pelita Bokeh Night", tag: "Malam", icon: "🕯️", bg: "linear-gradient(135deg,#0a0a0a,#2a1000)", color: "#ff9040", shadow: "0 4px 16px rgba(200,80,0,0.35)" },
+    { name: "Bunga Api Celebration", tag: "Kembang Api", icon: "🎆", bg: "linear-gradient(135deg,#050515,#0a0a30)", color: "#ffdd00", shadow: "0 4px 16px rgba(80,0,200,0.35)" },
+    { name: "Watercolour Raya Art", tag: "Cat Air", icon: "🎨", bg: "linear-gradient(135deg,#d0e8f0,#a8d8e8)", color: "#1a5070", shadow: "0 4px 16px rgba(0,80,120,0.25)" },
+    { name: "Royal Istana Grand", tag: "Diraja", icon: "👑", bg: "linear-gradient(135deg,#18082a,#361858)", color: "#ffd700", shadow: "0 4px 16px rgba(60,0,120,0.4)" },
+    { name: "Digital Modern Raya", tag: "Moden", icon: "💠", bg: "linear-gradient(135deg,#001830,#003060)", color: "#00e5ff", shadow: "0 4px 16px rgba(0,80,180,0.4)" },
+    { name: "Pastel Soft Dream", tag: "Pastel", icon: "🌷", bg: "linear-gradient(135deg,#f8d0e0,#f0d8f0)", color: "#7a2060", shadow: "0 4px 16px rgba(180,60,120,0.2)" },
+    { name: "Oil Painting Classic", tag: "Lukisan", icon: "🖼️", bg: "linear-gradient(135deg,#2a1800,#4a2c00)", color: "#d4a84b", shadow: "0 4px 16px rgba(80,40,0,0.4)" },
+    { name: "3D Render Festive", tag: "3D", icon: "🔮", bg: "linear-gradient(135deg,#001030,#002858)", color: "#60d0ff", shadow: "0 4px 16px rgba(0,60,160,0.4)" },
+    { name: "Neon Futuristic Raya", tag: "Futuristik", icon: "⚡", bg: "linear-gradient(135deg,#000810,#001020)", color: "#00ffcc", shadow: "0 4px 16px rgba(0,200,150,0.35)" },
+    { name: "Vintage Retro Raya", tag: "Retro", icon: "📷", bg: "linear-gradient(135deg,#3a2800,#6a4800)", color: "#f5deb3", shadow: "0 4px 16px rgba(100,60,0,0.4)" },
+    { name: "Flower Garden Portrait", tag: "Taman", icon: "🌺", bg: "linear-gradient(135deg,#0a2808,#1a5010)", color: "#90ee90", shadow: "0 4px 16px rgba(0,80,20,0.4)" },
+    { name: "Starlight Night Raya", tag: "Bintang", icon: "🌟", bg: "linear-gradient(135deg,#000318,#000830)", color: "#d0d8ff", shadow: "0 4px 16px rgba(20,20,100,0.4)" },
+    { name: "Mosque Dome Silhouette", tag: "Siluet", icon: "🌅", bg: "linear-gradient(135deg,#1a0800,#c05000)", color: "#fff0c0", shadow: "0 4px 16px rgba(160,60,0,0.4)" },
+    { name: "Batik Pattern Raya", tag: "Batik", icon: "🎭", bg: "linear-gradient(135deg,#380a28,#6a1a50)", color: "#ffb3d9", shadow: "0 4px 16px rgba(100,0,80,0.4)" },
+    { name: "Crescent Moon & Stars", tag: "Anak Bulan", icon: "🌙", bg: "linear-gradient(135deg,#000520,#001040)", color: "#ffd700", shadow: "0 4px 16px rgba(0,20,100,0.4)" },
+    { name: "Open House Celebration", tag: "Rumah Terbuka", icon: "🍽️", bg: "linear-gradient(135deg,#1a2a08,#305010)", color: "#ffe066", shadow: "0 4px 16px rgba(40,80,0,0.4)" },
+    { name: "Doa & Family Warmth", tag: "Keluarga", icon: "🤲", bg: "linear-gradient(135deg,#2a1808,#503018)", color: "#ffd090", shadow: "0 4px 16px rgba(100,50,0,0.4)" },
+    { name: "Balik Kampung Journey", tag: "Balik Kampung", icon: "🚗", bg: "linear-gradient(135deg,#0a1828,#c07000)", color: "#fff8e1", shadow: "0 4px 16px rgba(160,80,0,0.4)" },
+    { name: "Green Nature Serenity", tag: "Alam", icon: "🌿", bg: "linear-gradient(135deg,#012a01,#024a02)", color: "#c8f5c8", shadow: "0 4px 16px rgba(0,80,0,0.4)" },
+    { name: "Cinematic Epic Scene", tag: "Epik", icon: "🎬", bg: "linear-gradient(135deg,#0a0a0a,#200a30)", color: "#e0c8ff", shadow: "0 4px 16px rgba(80,0,160,0.35)" },
+    { name: "Minimalist Clean Raya", tag: "Minimalis", icon: "◻️", bg: "linear-gradient(135deg,#f0f0f0,#ffffff)", color: "#333", shadow: "0 4px 16px rgba(0,0,0,0.1)" },
+    { name: "Golden Arch Grand Entry", tag: "Gerbang Emas", icon: "🏛️", bg: "linear-gradient(135deg,#0a0500,#2a1800)", color: "#ffd700", shadow: "0 4px 16px rgba(150,80,0,0.4)" },
+    { name: "Market Lane Festive", tag: "Lorong Raya", icon: "🏮", bg: "linear-gradient(135deg,#1a0800,#401800)", color: "#ffcc66", shadow: "0 4px 16px rgba(120,40,0,0.4)" },
+    { name: "Night City Raya Glow", tag: "Bandar Malam", icon: "🌃", bg: "linear-gradient(135deg,#000510,#001028)", color: "#66ccff", shadow: "0 4px 16px rgba(0,40,120,0.4)" },
+    { name: "Traditional Attire Gala", tag: "Pakaian", icon: "👗", bg: "linear-gradient(135deg,#1a0828,#381848)", color: "#dda0dd", shadow: "0 4px 16px rgba(60,0,100,0.4)" },
+    { name: "Floating Petals Dreamy", tag: "Kelopak", icon: "🌸", bg: "linear-gradient(135deg,#1a0818,#381030)", color: "#ffb3d9", shadow: "0 4px 16px rgba(150,0,80,0.35)" },
+    { name: "Gold Calligraphy Art", tag: "Kaligrafi", icon: "✒️", bg: "linear-gradient(135deg,#0a0500,#1a1000)", color: "#ffd700", shadow: "0 4px 16px rgba(160,100,0,0.4)" },
+  ];
+
+  function buildShowcase() {
+    const grid = document.getElementById('styleShowcase');
+    grid.innerHTML = STYLES.map(s => `
+      <div class="ssc" style="background:${s.bg}; box-shadow:${s.shadow}; color:${s.color};">
+        <div class="ssc-icon">${s.icon}</div>
+        <div class="ssc-name">${s.name}</div>
+        <div class="ssc-tag">${s.tag}</div>
+      </div>
+    `).join('');
+  }
+
+  function scrollToBayar(e) {
+    e.preventDefault();
+    document.getElementById('final-cta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  buildShowcase();
+</script>
+
+</body>
+</html>
