@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penjana Prompt Raya</title>
+  <style>
+    :root {
+      --gold: #c9933a;
+      --gold-light: #f0c060;
+      --gold-dark: #a0721e;
+      --green: #1a5c2a;
+      --green-light: #2e8b45;
+      --cream: #fdf8ef;
+      --cream-dark: #f5ead6;
+      --text: #2c1a0a;
+      --text-muted: #7a5c3a;
+      --border: #ddc88a;
+      --shadow: rgba(100, 60, 0, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, var(--green) 0%, #0f3d1c 50%, var(--green) 100%);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 50%, rgba(201,147,58,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(201,147,58,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 60% 80%, rgba(201,147,58,0.08) 0%, transparent 35%);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px 24px 28px;
+      text-align: center;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    .header h1 {
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .header h1 span {
+      color: var(--gold-light);
+    }
+
+    .header-sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .header-lanterns {
+      font-size: 28px;
+      margin-bottom: 10px;
+      letter-spacing: 6px;
+    }
+
+    /* MAIN */
+    .main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    /* STEP */
+    .step {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .step:hover { box-shadow: 0 6px 28px rgba(100,60,0,0.16); }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 22px 16px;
+      border-bottom: 1px solid var(--cream-dark);
+      background: linear-gradient(to right, #fffaf2, #fff);
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(201,147,58,0.35);
+    }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .step-body {
+      padding: 20px 22px;
+    }
+
+    /* FORM ELEMENTS */
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,147,58,0.12);
+      background: #fff;
+    }
+
+    select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9933a' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* GRID CARDS */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .card-opt {
+      position: relative;
+    }
+
+    .card-opt input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .card-opt label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 10px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--cream);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      min-height: 80px;
+      gap: 6px;
+    }
+
+    .card-opt label .card-icon { font-size: 24px; }
+    .card-opt label .card-name { font-size: 12px; line-height: 1.3; }
+    .card-opt label .card-sub { font-size: 10px; color: var(--text-muted); font-weight: 400; }
+
+    .card-opt input:checked + label {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #fffaf0, #fff8e8);
+      box-shadow: 0 0 0 3px rgba(201,147,58,0.15), inset 0 0 0 1px rgba(201,147,58,0.2);
+    }
+
+    .card-opt label:hover {
+      border-color: var(--gold-dark);
+      background: #fffaf0;
+    }
+
+    /* IMAGE UPLOAD */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--cream);
+      position: relative;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--gold);
+      background: #fffaf0;
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-text { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .upload-sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+    #preview-img {
+      display: none;
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 12px;
+      margin: 14px auto 0;
+      border: 2px solid var(--gold);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    /* UCAPAN CUSTOM */
+    #custom-ucapan-wrap { display: none; margin-top: 12px; }
+
+    /* STYLES GRID - compact */
+    .styles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .styles-grid::-webkit-scrollbar { width: 6px; }
+    .styles-grid::-webkit-scrollbar-track { background: var(--cream); border-radius: 4px; }
+    .styles-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .style-opt {
+      position: relative;
+    }
+
+    .style-opt input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .style-opt label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 11px 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--cream);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      min-height: 60px;
+      justify-content: center;
+      line-height: 1.3;
+      gap: 3px;
+    }
+
+    .style-opt label .style-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .style-opt input:checked + label {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #fffaf0, #fff8e8);
+      box-shadow: 0 0 0 3px rgba(201,147,58,0.15);
+    }
+
+    .style-opt label:hover { border-color: var(--gold-dark); background: #fffaf0; }
+
+    /* GENERATE BUTTON */
+    .btn-generate {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 50%, var(--green) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 24px;
+      transition: all 0.2s;
+      box-shadow: 0 6px 24px rgba(26,92,42,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-generate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(26,92,42,0.4);
+    }
+
+    .btn-generate:active { transform: translateY(0); }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      margin-top: 28px;
+      background: #fff;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(201,147,58,0.15);
+    }
+
+    .result-header {
+      background: linear-gradient(135deg, var(--green) 0%, #0f3d1c 100%);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-title {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .result-subtitle {
+      color: rgba(255,255,255,0.65);
+      font-size: 12px;
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: #fff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,147,58,0.4); }
+    .btn-copy.copied { background: linear-gradient(135deg, #2e8b45 0%, #3aad58 100%); }
+
+    .result-body {
+      padding: 20px 22px;
+    }
+
+    .prompt-text {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100px;
+    }
+
+    .prompt-tips {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #f0faf3, #e8f5ec);
+      border: 1px solid #b8e6c6;
+      border-radius: 10px;
+    }
+
+    .prompt-tips strong {
+      color: var(--green);
+      font-size: 13px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .prompt-tips ul {
+      padding-left: 18px;
+      font-size: 12.5px;
+      color: #2c6e3e;
+      line-height: 1.8;
+    }
+
+    /* NOTICE */
+    .notice {
+      background: linear-gradient(135deg, #fff8e8 0%, #fffaf2 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .notice strong { color: var(--gold-dark); }
+
+    /* RESPONSIVE */
+    @media (max-width: 520px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .styles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-pattern"></div>
+  <div class="header-inner">
+    <div class="header-lanterns">🪔 ☪️ 🌙</div>
+    <div class="header-badge">Edisi Aidilfitri 2026</div>
+    <h1>Penjana Prompt <span>Gambar Raya</span></h1>
+    <p class="header-sub">Jana prompt AI yang sempurna untuk gambar sambutan Hari Raya anda</p>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- LANGKAH 1: Muat Naik Gambar -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Muat Naik Gambar</div>
+        <div class="step-desc">Gambar sendiri, keluarga atau perniagaan anda</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="imageInput" accept="image/*" />
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Klik untuk muat naik atau seret gambar ke sini</div>
+        <div class="upload-sub">JPG, PNG, WEBP • Resolusi tinggi • Muka jelas & terang</div>
+      </div>
+      <img id="preview-img" alt="Pratonton gambar" />
+      <div id="photo-tip" style="margin-top:10px;font-size:12px;color:#888;display:none;">
+        ✅ Gambar berjaya dimuat naik. Pastikan wajah jelas kelihatan untuk hasil terbaik.
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGKAH 2: Nama Pengirim -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Nama Pengirim</div>
+        <div class="step-desc">Nama yang akan dipaparkan pada gambar raya</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <label for="namaPengirim">Nama / Nama Keluarga / Nama Perniagaan</label>
+      <input type="text" id="namaPengirim" placeholder="cth: Ikhlas daripada Keluarga Ahmad Sekeluarga" />
+    </div>
+  </div>
+
+  <!-- LANGKAH 3: Teks Ucapan -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Teks Ucapan</div>
+        <div class="step-desc">Pilih ucapan yang akan dipaparkan pada gambar</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <label for="teksUcapan">Pilih Ucapan</label>
+      <select id="teksUcapan" onchange="toggleCustomUcapan()">
+        <option value="">-- Pilih Ucapan --</option>
+        <option value="Selamat Hari Raya Aidilfitri & Maaf Zahir Batin">Selamat Hari Raya Aidilfitri & Maaf Zahir Batin</option>
+        <option value="Salam Aidilfitri 1447H / 2026M">Salam Aidilfitri 1447H / 2026M</option>
+        <option value="Selamat Hari Raya Aidilfitri">Selamat Hari Raya Aidilfitri sahaja</option>
+        <option value="Maaf Zahir & Batin">Maaf Zahir & Batin sahaja</option>
+        <option value="Eid Mubarak">Eid Mubarak</option>
+        <option value="custom">✏️ Tulis sendiri...</option>
+      </select>
+      <div id="custom-ucapan-wrap">
+        <label for="customUcapan" style="margin-top:12px;">Tulis Ucapan Anda</label>
+        <textarea id="customUcapan" placeholder="Taip ucapan anda di sini..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGKAH 4: Gaya Raya -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Pilih Gaya Raya</div>
+        <div class="step-desc">38 gaya eksklusif untuk gambar Hari Raya anda</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="styles-grid" id="stylesGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGKAH 5: Mood Visual -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Mood Visual</div>
+        <div class="step-desc">Pilih suasana dan nuansa gambar anda</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="cards-grid" id="moodGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATE BUTTON -->
+  <button class="btn-generate" onclick="generatePrompt()">
+    ✨ Jana Prompt Sekarang
+  </button>
+
+  <!-- RESULT -->
+  <div class="result-box" id="resultBox">
+    <div class="result-header">
+      <div>
+        <div class="result-title">Prompt Anda Sudah Siap!</div>
+        <div class="result-subtitle">Salin dan guna dalam ChatGPT, Gemini, Midjourney atau mana-mana AI</div>
+      </div>
+      <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">📋 Salin Prompt</button>
+    </div>
+    <div class="result-body">
+      <div class="prompt-text" id="promptText"></div>
+      <div class="prompt-tips">
+        <strong>💡 Cara Menggunakan Prompt Ini:</strong>
+        <ul>
+          <li>Salin prompt di atas sepenuhnya</li>
+          <li>Buka <strong>ChatGPT</strong> (DALL·E), <strong>Gemini</strong>, <strong>Adobe Firefly</strong> atau <strong>Midjourney</strong></li>
+          <li>Tampal prompt dan muat naik gambar anda bersama-sama</li>
+          <li>Jana gambar dan muat turun hasilnya</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTICE -->
+  <div class="notice">
+    <strong>Nota:</strong> Prompt ini dioptimumkan untuk digunakan bersama gambar anda di platform AI bergambar.<br>
+    Hasil terbaik apabila gambar mempunyai pencahayaan yang baik dan wajah yang jelas.
+  </div>
+
+</main>
+
+<script>
+  // =====================
+  // DATA
+  // =====================
+  const STYLES = [
+    { id: "raya-signboard", name: "Raya Signboard Portrait", tag: "Potret" },
+    { id: "popup-card", name: "Pop-Up Card Raya", tag: "Kad" },
+    { id: "papercraft", name: "Paper Craft Diorama", tag: "Kraf" },
+    { id: "golden-lantern", name: "Golden Lantern Portrait", tag: "Lantang Emas" },
+    { id: "quran-spiritual", name: "Quran Inspired Spiritual", tag: "Rohani" },
+    { id: "bazaar-raya", name: "Bazaar Raya Festival", tag: "Pesta" },
+    { id: "studio-premium", name: "Studio Raya Premium", tag: "Studio" },
+    { id: "masjid-backdrop", name: "Masjid Backdrop Portrait", tag: "Masjid" },
+    { id: "ketupat-frame", name: "Ketupat Frame Greeting", tag: "Ketupat" },
+    { id: "songket-luxury", name: "Songket Luxury Portrait", tag: "Songket" },
+    { id: "kampung-nostalgic", name: "Kampung Nostalgic Scene", tag: "Kampung" },
+    { id: "pelita-bokeh", name: "Pelita Bokeh Night", tag: "Malam" },
+    { id: "bunga-api", name: "Bunga Api Celebration", tag: "Kembang Api" },
+    { id: "watercolour", name: "Watercolour Raya Art", tag: "Cat Air" },
+    { id: "royal-istana", name: "Royal Istana Grand", tag: "Diraja" },
+    { id: "digital-modern", name: "Digital Modern Raya", tag: "Moden" },
+    { id: "pastel-soft", name: "Pastel Soft Dream", tag: "Pastel" },
+    { id: "oil-painting", name: "Oil Painting Classic", tag: "Lukisan" },
+    { id: "3d-render", name: "3D Render Festive", tag: "3D" },
+    { id: "neon-futuristic", name: "Neon Futuristic Raya", tag: "Futuristik" },
+    { id: "vintage-retro", name: "Vintage Retro Raya", tag: "Retro" },
+    { id: "flower-garden", name: "Flower Garden Portrait", tag: "Taman" },
+    { id: "starlight-night", name: "Starlight Night Raya", tag: "Bintang" },
+    { id: "mosque-dome", name: "Mosque Dome Silhouette", tag: "Siluet" },
+    { id: "batik-pattern", name: "Batik Pattern Raya", tag: "Batik" },
+    { id: "crescent-moon", name: "Crescent Moon & Stars", tag: "Anak Bulan" },
+    { id: "open-house", name: "Open House Celebration", tag: "Rumah Terbuka" },
+    { id: "doa-family", name: "Doa & Family Warmth", tag: "Keluarga" },
+    { id: "travel-balik", name: "Balik Kampung Journey", tag: "Balik Kampung" },
+    { id: "green-forest", name: "Green Nature Serenity", tag: "Alam" },
+    { id: "cinematic-epic", name: "Cinematic Epic Scene", tag: "Epik" },
+    { id: "minimalist-clean", name: "Minimalist Clean Raya", tag: "Minimalis" },
+    { id: "golden-arch", name: "Golden Arch Grand Entry", tag: "Gerbang Emas" },
+    { id: "market-lane", name: "Market Lane Festive", tag: "Lorong Raya" },
+    { id: "night-city", name: "Night City Raya Glow", tag: "Bandar Malam" },
+    { id: "traditional-attire", name: "Traditional Attire Gala", tag: "Pakaian" },
+    { id: "floating-petals", name: "Floating Petals Dreamy", tag: "Kelopak" },
+    { id: "gold-calligraphy", name: "Gold Calligraphy Art", tag: "Kaligrafi" },
+  ];
+
+  const MOODS = [
+    { id: "warm-golden", name: "Warm Golden", icon: "🌅", desc: "Hangat & Keemasan" },
+    { id: "soft-elegant", name: "Soft Elegant", icon: "🕊️", desc: "Lembut & Anggun" },
+    { id: "premium-luxury", name: "Premium Luxury", icon: "💎", desc: "Mewah & Eksklusif" },
+    { id: "nostalgic-kampung", name: "Nostalgic Kampung", icon: "🏡", desc: "Nostalgia & Kampung" },
+    { id: "cinematic-festival", name: "Cinematic Festival", icon: "🎬", desc: "Sinematik & Meriah" },
+  ];
+
+  const MOOD_PROMPTS = {
+    "warm-golden": "warm golden hour lighting, amber and gold color tones, soft bokeh, heartfelt and cozy atmosphere",
+    "soft-elegant": "soft diffused lighting, pastel and ivory tones, graceful and serene mood, delicate aesthetic",
+    "premium-luxury": "dramatic studio lighting, deep rich colors, premium and opulent feel, high fashion editorial style",
+    "nostalgic-kampung": "warm nostalgia filter, earthy kampung tones, traditional Malay rural setting, sentimental atmosphere",
+    "cinematic-festival": "cinematic wide lens, vibrant festive colors, epic dramatic lighting, celebratory grand atmosphere",
+  };
+
+  const STYLE_PROMPTS = {
+    "raya-signboard": "a decorated Hari Raya signboard as backdrop, festive banner with Arabic calligraphy, lanterns and fairy lights framing",
+    "popup-card": "3D pop-up greeting card style, intricate paper layers revealing a Raya scene, flat lay creative composition",
+    "papercraft": "detailed paper craft diorama, layered paper cut Hari Raya village scene, miniature festive environment",
+    "golden-lantern": "surrounded by glowing golden lanterns, warm light reflections, ornate lantern bokeh background",
+    "quran-spiritual": "spiritual Islamic setting, soft prayer rug background, holy Quran and tasbih props, serene devotional mood",
+    "bazaar-raya": "vibrant Ramadan bazaar setting, colorful market stalls, festive food and lights, bustling celebration backdrop",
+    "studio-premium": "professional photography studio, seamless backdrop with premium Raya decoration, high-end portrait lighting",
+    "masjid-backdrop": "magnificent mosque exterior, ornate Islamic architecture, golden dome and minaret backdrop",
+    "ketupat-frame": "framed by woven ketupat shapes, geometric rattan patterns, traditional Malay craft aesthetic",
+    "songket-luxury": "draped in rich songket fabric, intricate Malay weave patterns, gold thread details, regal composition",
+    "kampung-nostalgic": "traditional Malay kampung house setting, wooden rumah melayu, lush garden, nostalgic golden afternoon",
+    "pelita-bokeh": "rows of glowing pelita oil lamps, soft night bokeh, warm firelight, tranquil Raya eve atmosphere",
+    "bunga-api": "colorful fireworks exploding overhead, sparkling celebration, festive night sky, joyful explosion of colors",
+    "watercolour": "soft watercolor painting effect, blended Raya motifs, artistic brushstrokes, dreamy painted aesthetic",
+    "royal-istana": "grand royal palace setting, ornate istana architecture, ceremonial grandeur, formal royal portrait style",
+    "digital-modern": "sleek modern digital art style, geometric Islamic patterns, contemporary design, vibrant graphic aesthetic",
+    "pastel-soft": "soft pastel color palette, dreamy light aesthetic, gentle floral elements, tender and sweet composition",
+    "oil-painting": "classic oil painting portrait style, rich painterly textures, old master technique, timeless fine art look",
+    "3d-render": "photorealistic 3D rendered scene, volumetric lighting, highly detailed CGI environment, festive 3D elements",
+    "neon-futuristic": "neon lights and futuristic setting, cyberpunk Islamic aesthetic, glowing geometric patterns, modern sci-fi Raya",
+    "vintage-retro": "vintage 1970s Raya photograph aesthetic, retro color grading, film grain texture, nostalgic old photo style",
+    "flower-garden": "lush tropical flower garden, hibiscus and frangipani blooms, botanical paradise, natural garden portrait",
+    "starlight-night": "clear starlit night sky, crescent moon glowing, magical night atmosphere, celestial Raya setting",
+    "mosque-dome": "silhouette against glowing mosque dome, sunset behind minaret, dramatic backlit composition, spiritual symbolism",
+    "batik-pattern": "intricate batik fabric background, traditional Malaysian batik motifs, rich geometric patterns, cultural heritage",
+    "crescent-moon": "giant golden crescent moon and stars, night sky with Islamic symbols, spiritual celestial backdrop",
+    "open-house": "warm open house gathering scene, festive table spread with Raya delicacies, communal celebration setting",
+    "doa-family": "intimate family doa scene, warm gathering, togetherness and blessings, heartfelt emotional composition",
+    "travel-balik": "balik kampung road trip scene, village-bound journey, sunrise on the highway, homecoming celebration",
+    "green-forest": "serene green nature setting, lush tropical greenery, peaceful forest light, calm and refreshing",
+    "cinematic-epic": "epic cinematic composition, sweeping dramatic scene, grand scale environment, blockbuster production quality",
+    "minimalist-clean": "clean minimalist composition, white space aesthetic, simple elegant Raya elements, sophisticated restraint",
+    "golden-arch": "grand golden archway entrance, ornate floral arch, ceremonial entry gate, majestic welcoming scene",
+    "market-lane": "festive market lane at night, string lights canopy, colourful stalls, lively street celebration atmosphere",
+    "night-city": "city skyline at night with Raya lights, urban festive glow, kuala lumpur backdrop, modern celebration",
+    "traditional-attire": "elaborate traditional Malay baju raya attire focus, intricate embroidery details, regal cultural dress",
+    "floating-petals": "surrounded by floating flower petals, dreamy petal shower, soft ethereal atmosphere, magical fantasy",
+    "gold-calligraphy": "gold Arabic calligraphy elements, bismillah and Eid greetings in ornate script, cultural artistic backdrop",
+  };
+
+  // =====================
+  // RENDER
+  // =====================
+  function renderStyles() {
+    const grid = document.getElementById('stylesGrid');
+    grid.innerHTML = STYLES.map((s, i) => `
+      <div class="style-opt">
+        <input type="radio" name="style" id="style-${s.id}" value="${s.id}" ${i === 0 ? 'checked' : ''} />
+        <label for="style-${s.id}">
+          <span>${s.name}</span>
+          <span class="style-tag">${s.tag}</span>
+        </label>
+      </div>
+    `).join('');
+  }
+
+  function renderMoods() {
+    const grid = document.getElementById('moodGrid');
+    grid.innerHTML = MOODS.map((m, i) => `
+      <div class="card-opt">
+        <input type="radio" name="mood" id="mood-${m.id}" value="${m.id}" ${i === 0 ? 'checked' : ''} />
+        <label for="mood-${m.id}">
+          <span class="card-icon">${m.icon}</span>
+          <span class="card-name">${m.name}</span>
+          <span class="card-sub">${m.desc}</span>
+        </label>
+      </div>
+    `).join('');
+  }
+
+  // =====================
+  // IMAGE PREVIEW
+  // =====================
+  document.getElementById('imageInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('preview-img');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('photo-tip').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      document.getElementById('imageInput').files = e.dataTransfer.files;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = document.getElementById('preview-img');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+        document.getElementById('photo-tip').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // =====================
+  // UCAPAN CUSTOM
+  // =====================
+  function toggleCustomUcapan() {
+    const val = document.getElementById('teksUcapan').value;
+    document.getElementById('custom-ucapan-wrap').style.display = val === 'custom' ? 'block' : 'none';
+  }
+
+  // =====================
+  // GENERATE PROMPT
+  // =====================
+  function generatePrompt() {
+    const nama = document.getElementById('namaPengirim').value.trim();
+    const ucapanSel = document.getElementById('teksUcapan').value;
+    const ucapan = ucapanSel === 'custom'
+      ? (document.getElementById('customUcapan').value.trim() || 'Selamat Hari Raya Aidilfitri')
+      : (ucapanSel || 'Selamat Hari Raya Aidilfitri & Maaf Zahir Batin');
+
+    const styleEl = document.querySelector('input[name="style"]:checked');
+    const moodEl = document.querySelector('input[name="mood"]:checked');
+
+    const styleId = styleEl ? styleEl.value : STYLES[0].id;
+    const moodId = moodEl ? moodEl.value : MOODS[0].id;
+
+    const styleName = STYLES.find(s => s.id === styleId)?.name || '';
+    const stylePrompt = STYLE_PROMPTS[styleId] || '';
+    const moodPrompt = MOOD_PROMPTS[moodId] || '';
+
+    const hasPhoto = document.getElementById('imageInput').files.length > 0;
+
+    const photoInstructions = hasPhoto
+      ? `Use the uploaded reference photo to preserve the subject's exact facial features, skin tone, and likeness. Maintain realistic face details and natural proportions.`
+      : `Generate a realistic and festive Hari Raya portrait in this style.`;
+
+    const nameBlock = nama
+      ? `Include the following sender name elegantly on the image: "${nama}".`
+      : ``;
+
+    const prompt = `Create a stunning, high-quality Hari Raya Aidilfitri greeting image in the "${styleName}" style.
+
+${photoInstructions}
+
+STYLE DIRECTION:
+${stylePrompt}
+
+VISUAL MOOD:
+${moodPrompt}
+
+GREETING TEXT:
+Display the following text prominently and beautifully on the image: "${ucapan}"${nama ? `\nSender: "${nama}"` : ''}
+Use elegant, legible typography. Ensure text does not overlap faces. Use Malay/Arabic-inspired font styling. No spelling errors.
+
+TECHNICAL REQUIREMENTS:
+- Ultra high resolution, photorealistic quality
+- Aspect ratio: 4:5 (portrait) preferred
+- Professional color grading and lighting
+- Rich festive details with traditional Malay and Islamic visual elements
+- No distorted faces, no extra limbs, no text artifacts
+- Final image should feel premium, celebratory, and emotionally resonant
+
+${hasPhoto ? 'IMPORTANT: Face must match the uploaded reference photo exactly.' : ''}`.trim();
+
+    document.getElementById('promptText').textContent = prompt;
+    const box = document.getElementById('resultBox');
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '📋 Salin Prompt';
+    btn.classList.remove('copied');
+  }
+
+  // =====================
+  // COPY
+  // =====================
+  function copyPrompt() {
+    const text = document.getElementById('promptText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Disalin!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Salin Prompt';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Disalin!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Salin Prompt';
+        btn.classList.remove('copied');
+      }, 2500);
+    });
+  }
+
+  // =====================
+  // INIT
+  // =====================
+  renderStyles();
+  renderMoods();
+</script>
+</body>
+</html>
