@@ -535,6 +535,7 @@
     <div class="step-body">
       <label for="namaPengirim">Nama / Nama Keluarga / Nama Perniagaan</label>
       <input type="text" id="namaPengirim" placeholder="cth: Ikhlas daripada Keluarga Ahmad Sekeluarga" />
+      <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">💡 Tip: Anda boleh tambah perkataan seperti "Ikhlas dari" sebelum nama anda jika mahu.</div>
     </div>
   </div>
 
@@ -851,7 +852,7 @@ VISUAL MOOD:
 ${moodPrompt}
 
 GREETING TEXT:
-Display the following text prominently and beautifully on the image: "${ucapan}"${nama ? `\nSender: "${nama}"` : ''}
+Display the following text prominently and beautifully on the image: "${ucapan}"${nama ? `\n"${nama}"` : ''}
 Use elegant, legible typography. Ensure text does not overlap faces. Use Malay/Arabic-inspired font styling. No spelling errors.
 
 TECHNICAL REQUIREMENTS:
