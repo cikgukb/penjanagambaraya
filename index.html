@@ -463,6 +463,33 @@
       line-height: 1.8;
     }
 
+    .info-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .info-step {
+      background: #fff;
+      border: 1px solid #b8e6c6;
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(44,110,62,0.06);
+      transition: transform 0.2s;
+    }
+    .info-step:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(44,110,62,0.12);
+      border-color: var(--green);
+    }
+    .info-step-icon { font-size: 28px; margin-bottom: 8px; }
+    .info-step-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 4px; line-height: 1.2; text-transform: uppercase;}
+    .info-step-desc { font-size: 11px; color: #555; line-height: 1.35; }
+    @media (max-width: 600px) {
+      .info-steps { grid-template-columns: repeat(2, 1fr); }
+    }
+
     /* NOTICE */
     .notice {
       background: linear-gradient(135deg, #fff8e8 0%, #fffaf2 100%);
@@ -616,13 +643,31 @@
       <div class="prompt-text" id="promptText"></div>
       <div class="prompt-tips">
         <strong>💡 Cara Menggunakan Prompt Ini:</strong>
-        <ul>
-          <li>Salin prompt di atas sepenuhnya</li>
-          <li>Buka <strong>ChatGPT</strong> (DALL·E), <strong>Gemini</strong>, <strong>Adobe Firefly</strong> atau <strong>Midjourney</strong></li>
-          <li>Tampal prompt dan muat naik gambar anda bersama-sama</li>
-          <li>Jana gambar dan muat turun hasilnya</li>
-          <li><strong>Tips:</strong> Jika anda ingin membuang <em>watermark</em> daripada gambar Gemini, anda boleh gunakan alat khas ini: <a href="https://sora2dl.com/gemini-removal" target="_blank" rel="noopener noreferrer">sora2dl.com/gemini-removal</a>.</li>
-        </ul>
+        <div class="info-steps">
+          <div class="info-step">
+            <div class="info-step-icon">📋</div>
+            <div class="info-step-title">1. Salin Prompt</div>
+            <div class="info-step-desc">Tekan butang salin di atas untuk menyalin teks.</div>
+          </div>
+          <div class="info-step">
+            <div class="info-step-icon">🤖</div>
+            <div class="info-step-title">2. Buka App AI</div>
+            <div class="info-step-desc">Buka ChatGPT, Gemini, atau Midjourney.</div>
+          </div>
+          <div class="info-step">
+            <div class="info-step-icon">🖼️</div>
+            <div class="info-step-title">3. Tampal & Muat</div>
+            <div class="info-step-desc">Tampal prompt & muat naik gambar rujukan anda.</div>
+          </div>
+          <div class="info-step">
+            <div class="info-step-icon">✨</div>
+            <div class="info-step-title">4. Jana & Simpan</div>
+            <div class="info-step-desc">Jana gambar dan muat turun hasilnya. Selesai!</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.7); padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--green); font-size: 12px; line-height: 1.5; margin-top: 10px;">
+          <strong>💡 Tips:</strong> Jika anda ingin membuang <em>watermark</em> daripada gambar Gemini, anda boleh gunakan alat khas ini: <a href="https://sora2dl.com/gemini-removal" target="_blank" rel="noopener noreferrer" style="color: #2c6e3e; font-weight: bold; text-decoration: underline;">sora2dl.com/gemini-removal</a>.
+        </div>
       </div>
     </div>
   </div>
